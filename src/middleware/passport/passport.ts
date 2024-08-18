@@ -67,4 +67,5 @@ class passportconfig{
 }
 
 
+
 export default new passportconfig()

@@ -83,6 +83,9 @@ export interface IUserService {
       const token = TokenService.generateAuthToken(user);
       return { user, token }
     }
+
+    
+
   }
   
   export default UserService;

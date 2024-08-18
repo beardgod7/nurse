@@ -8,8 +8,8 @@ const passport_1 = __importDefault(require("passport"));
 const express_1 = __importDefault(require("express"));
 require("../middleware/passport/passport");
 const express_session_1 = __importDefault(require("express-session"));
-const passportroute_1 = __importDefault(require("../middleware/passport/passportroute"));
 const route_1 = __importDefault(require("../routes/route"));
+const passportroute_1 = __importDefault(require("../middleware/passportroute"));
 class App {
     constructor() {
         this.app = (0, express_1.default)();
@@ -25,7 +25,7 @@ class App {
             resave: false,
             saveUninitialized: true,
             cookie: {
-                maxAge: 60 * 60 * 1000
+                maxAge: 30 * 60 * 1000
             }
         }));
         this.app.use(passport_1.default.initialize());

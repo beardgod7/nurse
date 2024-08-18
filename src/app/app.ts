@@ -3,8 +3,8 @@ import passport from "passport";
 import express, { Application} from 'express';
 import '../middleware/passport/passport';
 import session from "express-session";
-import passportroute from "../middleware/passport/passportroute";
 import UserRouter from '../routes/route'
+import passportroute2 from "../middleware/passportroute";
 
 class App {
     public app: Application;
@@ -23,7 +23,7 @@ class App {
             resave: false,
             saveUninitialized: true,
             cookie: {
-                maxAge: 60 * 60 * 1000 
+                maxAge: 30 * 60 * 1000 
               }
           }))
           this.app.use(passport.initialize());
@@ -32,7 +32,7 @@ class App {
 
     private initializeRoutes(): void {
         this.app.use('/api', UserRouter);
-        this.app.use('/auth', passportroute)
+        this.app.use('/auth', passportroute2)
 
     
     }
