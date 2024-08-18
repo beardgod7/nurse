@@ -9,7 +9,7 @@ const express_1 = __importDefault(require("express"));
 require("../middleware/passport/passport");
 const express_session_1 = __importDefault(require("express-session"));
 const route_1 = __importDefault(require("../routes/route"));
-const passportroute_1 = __importDefault(require("../middleware/passportroute"));
+const passportroute_1 = __importDefault(require("../middleware/passport/passportroute"));
 class App {
     constructor() {
         this.app = (0, express_1.default)();
