@@ -4,7 +4,7 @@ import express, { Application} from 'express';
 import '../middleware/passport/passport';
 import session from "express-session";
 import UserRouter from '../routes/route'
-import passportroute2 from "../middleware/passportroute";
+import passportroute from "../middleware/passport/passportroute";
 
 class App {
     public app: Application;
@@ -32,7 +32,7 @@ class App {
 
     private initializeRoutes(): void {
         this.app.use('/api', UserRouter);
-        this.app.use('/auth', passportroute2)
+        this.app.use('/auth', passportroute)
 
     
     }

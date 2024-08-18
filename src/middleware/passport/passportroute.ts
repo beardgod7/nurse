@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import passport from 'passport';
 import { Router } from 'express';
-import TokenService from '../utils/Jwtoken';
-import IUser from '../model/user/userinterface';
-import ErrorHandler from '../utils/Errorhandler';
+import TokenService from '../../utils/Jwtoken';
+import IUser from '../../model/user/userinterface';
+import ErrorHandler from '../../utils/Errorhandler';
 
 class Passportroute {
     public router: Router;
