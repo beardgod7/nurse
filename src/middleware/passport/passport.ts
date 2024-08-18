@@ -11,7 +11,7 @@ class passportconfig{
     constructor(){
         this.clientID=process.env.clientID || ""
         this.clientSecret=process.env.clientSecret|| ""
-        this.callbackURL=process.env.callbackUrl || ""
+        this.callbackURL=process.env.callbackURL || ""
         this.connect()
     }
 
