@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_1 = __importDefault(require("http"));
 const app_1 = __importDefault(require("./app/app"));
+require("./middleware/passport/passport");
 class Server {
     constructor(app, httpPort = 80) {
         this.app = app;

@@ -4,7 +4,7 @@ import fs from 'fs'
 import path from 'path'
 import express, { Application } from 'express';
 import app from './app/app'
-
+import './middleware/passport/passport'
 
 
 class server{

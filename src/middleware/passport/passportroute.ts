@@ -3,7 +3,7 @@ import passport from 'passport';
 import { Router } from 'express';
 import TokenService from '../../utils/Jwtoken';
 import IUser from '../../model/user/userinterface';
-import ErrorHandler from '../../utils/Errorhandler';
+import ErrorHandler from '../../utils/Errorhandler'
 
 class Passportroute {
     public router: Router;
@@ -17,8 +17,6 @@ class Passportroute {
         try {
             
             this.router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-
-          
             this.router.get(
                 '/google/callback',
                 passport.authenticate('google', { failureRedirect: '/' }),

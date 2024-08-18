@@ -11,13 +11,14 @@ class passportconfig{
     constructor(){
         this.clientID=process.env.clientID || ""
         this.clientSecret=process.env.clientSecret|| ""
-        this.callbackURL=process.env.callbackURL || ""
+        this.callbackURL=process.env.callbackUrl || ""
         this.connect()
     }
 
     
    private async connect():Promise<void>{
         try {
+            
             passport.use(
                 new GoogleStrategy(
                   {
@@ -65,7 +66,5 @@ class passportconfig{
     }
     
 }
-
-
 
 export default new passportconfig()

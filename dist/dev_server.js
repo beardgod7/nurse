@@ -9,6 +9,7 @@ const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const express_1 = __importDefault(require("express"));
 const app_1 = __importDefault(require("./app/app"));
+require("./middleware/passport/passport");
 class server {
     constructor(app, httpsPort = 443, httpPort = 80) {
         this.app = app;

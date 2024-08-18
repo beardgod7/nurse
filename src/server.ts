@@ -1,8 +1,8 @@
 import http from 'http';
 import express, { Application } from 'express';
 import app from './app/app';
-
-class Server {
+import './middleware/passport/passport'
+class Server {   
     private app: Application;
     private httpPort: number;
 
