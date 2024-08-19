@@ -17,6 +17,7 @@ class UserRouter {
     private initializeRoutes() {
       this.router.post('/create-users',  this.userController.createUser);
       this.router.post('/login', this.userController.login);
+      this.router.put('/Update', this.userController.completegoogleuser);
     }
   }
   

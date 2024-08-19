@@ -13,10 +13,10 @@ class Passportroute {
             if (req.user) {
                 const user = req.user;
                 const token = Jwtoken_1.default.generateAuthToken(user);
-                res.status(200).json('auth successful');
+                res.status(200).json({ message: 'Auth successful', token });
             }
             else {
-                next(new Errorhandler_1.default("Authentication failed", 401));
+                res.status(401).json({ message: "Authentication failed" });
             }
         };
         this.router = (0, express_1.Router)();
@@ -25,12 +25,13 @@ class Passportroute {
     async routerinit() {
         try {
             this.router.get('/google', passport_1.default.authenticate('google', { scope: ['profile', 'email'] }));
-            this.router.get('/google/callback', passport_1.default.authenticate('google', { failureRedirect: '/' }), this.googleCallback);
+            this.router.get('/google/callback', passport_1.default.authenticate('google', { failureMessage: true }), this.googleCallback);
             this.router.get('/logout', (req, res, next) => {
                 req.logout((error) => {
-                    if (error)
-                        return next(error);
-                    res.redirect('/');
+                    if (error) {
+                        return next(new Errorhandler_1.default("Logout failed", 500));
+                    }
+                    res.status(200).json({ message: "Logout successful" });
                 });
             });
         }

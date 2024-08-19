@@ -10,5 +10,11 @@ class Sanitizer {
     static sanitizePassword(password) {
         return password.trim();
     }
+    static sanitizeName(firstName) {
+        return firstName.trim();
+    }
+    static sanitizeGender(Gender) {
+        return Gender.trim();
+    }
 }
 exports.default = Sanitizer;

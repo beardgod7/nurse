@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 import IUser from './userinterface';
 import UserHash from '../../utils/bcrypt';
 
-class UserSchemaClass {
+class UserSchemaClass  {
     public schema: Schema;
 
     constructor() {
@@ -12,10 +12,13 @@ class UserSchemaClass {
                 unique: true,
                 sparse:true
             },
-            
             firstName: {
                 type: String,
             },
+            gender: {
+                type: String,
+            },
+
             lastName: {
                 type: String,
             },

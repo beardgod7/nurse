@@ -15,32 +15,37 @@ class Passportroute {
 
     async routerinit() {
         try {
-            
             this.router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
             this.router.get(
                 '/google/callback',
-                passport.authenticate('google', { failureRedirect: '/' }),
+                passport.authenticate('google', { failureMessage: true }),  
                 this.googleCallback
             );
+
             this.router.get('/logout', (req: Request, res: Response, next: NextFunction) => {
                 req.logout((error) => {
-                    if (error) return next(error);
-                    res.redirect('/');
+                    if (error) {
+                        return next(new ErrorHandler("Logout failed", 500));
+                    }
+                    res.status(200).json({ message: "Logout successful" });
                 });
             });
         } catch (error) {
             console.error(error);
         }
     }
+
     public googleCallback = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         if (req.user) {
             const user = req.user as IUser;
             const token = TokenService.generateAuthToken(user);
-            res.status(200).json('auth successful');
+            res.status(200).json({ message: 'Auth successful', token });
         } else {
-            next(new ErrorHandler("Authentication failed", 401));
+            res.status(401).json({ message: "Authentication failed" });
         }
     };
 }
 
 export default new Passportroute().router;
+

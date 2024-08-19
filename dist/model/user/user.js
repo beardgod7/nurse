@@ -39,6 +39,9 @@ class UserSchemaClass {
             firstName: {
                 type: String,
             },
+            gender: {
+                type: String,
+            },
             lastName: {
                 type: String,
             },

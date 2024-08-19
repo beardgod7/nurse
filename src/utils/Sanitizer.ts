@@ -10,6 +10,13 @@ export default class Sanitizer {
     static sanitizePassword(password: string): string {
       return password.trim(); 
     }
-  
+
+    static sanitizeName(firstName: string): string {
+      return firstName.trim(); 
+    }
+    
+    static sanitizeGender(Gender: string): string {
+      return Gender.trim(); 
+    }
   }
   

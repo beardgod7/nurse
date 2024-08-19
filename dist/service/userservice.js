@@ -50,7 +50,27 @@ class UserService {
             return null;
         }
         const token = Jwtoken_1.default.generateAuthToken(user);
-        return { user, token };
+        return user;
+    }
+    async completegoogleuser(data, userId) {
+        const updatedData = {};
+        if (data.firstName) {
+            updatedData.firstName = Sanitizer_1.default.sanitizeName(data.firstName);
+        }
+        if (data.lastName) {
+            updatedData.lastName = Sanitizer_1.default.sanitizeName(data.lastName);
+        }
+        if (data.gender) {
+            updatedData.gender = Sanitizer_1.default.sanitizeGender(data.gender);
+        }
+        if (data.password) {
+            if (!Validator_1.default.isPasswordStrong(data.password)) {
+                throw new Error('Password is not strong enough.');
+            }
+            updatedData.password = await Sanitizer_1.default.sanitizePassword(data.password);
+        }
+        const updatedUser = await this.userModel.findByIdAndUpdate(userId, updatedData, { new: true });
+        return updatedUser;
     }
 }
 exports.default = UserService;

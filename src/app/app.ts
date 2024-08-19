@@ -5,6 +5,7 @@ import UserRouter from '../routes/route';
 import passportroute from '../middleware/passport/passportroute'; 
 import ErrorHandler from '../utils/Errorhandler'; 
 import  connectivityistance  from '../utils/mongo_con'; 
+import cors from 'cors'
 
 class App {
   public app: Application;
@@ -30,6 +31,7 @@ class App {
     }));
     this.app.use(passport.initialize());
     this.app.use(passport.session());
+    this.app.use(cors)
   }
 
   private initializeRoutes(): void {
