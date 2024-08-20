@@ -31,7 +31,7 @@ class App {
     }));
     this.app.use(passport.initialize());
     this.app.use(passport.session());
-    this.app.use(cors)
+    //this.app.use(cors)
   }
 
   private initializeRoutes(): void {

@@ -30,6 +30,7 @@ class App {
         }));
         this.app.use(passport_1.default.initialize());
         this.app.use(passport_1.default.session());
+        //this.app.use(cors)
     }
     initializeRoutes() {
         this.app.use('/api', route_1.default);
