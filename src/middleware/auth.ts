@@ -11,6 +11,7 @@ class Auth {
         return next(new ErrorHandler('Please login to continue', 401));
       }
       const decoded = jwt.verify(token, process.env.JWT_SECRET || '') as JwtPayload;
+      console.log(decoded)
       if (!decoded._id) {
         return next(new ErrorHandler('Invalid token. Please log in again.', 401));
       }

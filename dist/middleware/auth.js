@@ -14,6 +14,7 @@ class Auth {
                 return next(new Errorhandler_1.default('Please login to continue', 401));
             }
             const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET || '');
+            console.log(decoded);
             if (!decoded._id) {
                 return next(new Errorhandler_1.default('Invalid token. Please log in again.', 401));
             }
