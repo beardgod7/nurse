@@ -6,7 +6,7 @@ export default interface IUser extends Document {
     lastName?: string;   
     email: string;
     gender?:string
-    phoneNumber?: string;  
+    phoneNumber?: number;  
     password?: string;
     role: 'client';  
     location?: ILocation; 
@@ -17,7 +17,7 @@ export default interface IUser extends Document {
 }
 
 
-interface ILocation {
+export interface ILocation {
     type: 'Point';
     coordinates: [number, number];
     address?: string;

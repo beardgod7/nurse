@@ -1,5 +1,5 @@
 import User from '../model/user/user';
-import IUser from '../model/user/userinterface';
+import IUser, { ILocation } from '../model/user/userinterface';
 import Validator from '../utils/Validator';
 import Sanitizer from '../utils/Sanitizer';
 import TokenService from '../utils/Jwtoken';
@@ -7,7 +7,8 @@ import TokenService from '../utils/Jwtoken';
 export interface IUserService {
     createUser(data: CreateUserDTO): Promise<IUser | null>;
     login(data: LoginUserDTO): Promise<IUser | null>;
-    completegoogleuser(data:googleuserupdateDTO,userId:string):Promise<IUser | null>
+    completegoogleuser(data:googleuserupdateDTO,userId:string):Promise<IUser | null>;
+    completeuser(data:userupdateDTO,userId:string):Promise<IUser | null>
     
   }
   export interface googleuserupdateDTO {
@@ -15,9 +16,10 @@ export interface IUserService {
     lastName:string,
     phoneNumber:number,
     gender:string,
-    address:string,
+    location:ILocation,
     password:string,
   }
+  export interface userupdateDTO extends googleuserupdateDTO{}
   export interface CreateUserDTO {
     email: string;
     password: string;
@@ -105,6 +107,12 @@ export interface IUserService {
       if (data.gender) {
         updatedData.gender = Sanitizer.sanitizeGender(data.gender);
       }
+      if (data.phoneNumber) {
+        updatedData.phoneNumber = data.phoneNumber; 
+      }
+      if (data.location) {
+        updatedData.location = data.location; 
+      }
       if (data.password) {
         if (!Validator.isPasswordStrong(data.password)) {
           throw new Error('Password is not strong enough.');
@@ -112,6 +120,27 @@ export interface IUserService {
         updatedData.password = await Sanitizer.sanitizePassword(data.password);
       }
   
+      const updatedUser = await this.userModel.findByIdAndUpdate(userId, updatedData, { new: true });
+      return updatedUser;
+    }
+    
+    async  completeuser(data: userupdateDTO, userId: string): Promise<IUser | null> {
+      const updatedData: Partial<IUser> = {};
+      if (data.firstName) {
+        updatedData.firstName = Sanitizer.sanitizeName(data.firstName);
+      }
+      if (data.lastName) {
+        updatedData.lastName = Sanitizer.sanitizeName(data.lastName);
+      }
+      if (data.gender) {
+        updatedData.gender = Sanitizer.sanitizeGender(data.gender);
+      }
+      if (data.phoneNumber) {
+        updatedData.phoneNumber = data.phoneNumber; 
+      }
+      if (data.location) {
+        updatedData.location = data.location; 
+      }
       const updatedUser = await this.userModel.findByIdAndUpdate(userId, updatedData, { new: true });
       return updatedUser;
     } 

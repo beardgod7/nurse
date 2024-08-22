@@ -28,7 +28,7 @@ class UserSchemaClass  {
                 unique: true,
             },
             phoneNumber: {
-                type: String,
+                type: Number,
             },
             password: {
                 type: String,

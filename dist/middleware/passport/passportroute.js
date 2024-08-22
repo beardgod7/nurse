@@ -5,15 +5,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const passport_1 = __importDefault(require("passport"));
 const express_1 = require("express");
-const Jwtoken_1 = __importDefault(require("../../utils/Jwtoken"));
 const Errorhandler_1 = __importDefault(require("../../utils/Errorhandler"));
+const usertoken_1 = __importDefault(require("../../utils/usertoken"));
 class Passportroute {
     constructor() {
         this.googleCallback = async (req, res, next) => {
             if (req.user) {
                 const user = req.user;
-                const token = Jwtoken_1.default.generateAuthToken(user);
-                res.status(200).json({ message: 'Auth successful', token });
+                const token = usertoken_1.default.sendToken(user, 201, res);
             }
             else {
                 res.status(401).json({ message: "Authentication failed" });

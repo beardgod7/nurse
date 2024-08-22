@@ -4,6 +4,7 @@ import { Router } from 'express';
 import TokenService from '../../utils/Jwtoken';
 import IUser from '../../model/user/userinterface';
 import ErrorHandler from '../../utils/Errorhandler'
+import AuthService from '../../utils/usertoken';
 
 class Passportroute {
     public router: Router;
@@ -35,12 +36,11 @@ class Passportroute {
             console.error(error);
         }
     }
-
     public googleCallback = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         if (req.user) {
             const user = req.user as IUser;
-            const token = TokenService.generateAuthToken(user);
-            res.status(200).json({ message: 'Auth successful', token });
+            const token = AuthService.sendToken(user, 201, res);
+            
         } else {
             res.status(401).json({ message: "Authentication failed" });
         }

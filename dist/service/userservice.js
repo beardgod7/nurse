@@ -63,11 +63,37 @@ class UserService {
         if (data.gender) {
             updatedData.gender = Sanitizer_1.default.sanitizeGender(data.gender);
         }
+        if (data.phoneNumber) {
+            updatedData.phoneNumber = data.phoneNumber;
+        }
+        if (data.location) {
+            updatedData.location = data.location;
+        }
         if (data.password) {
             if (!Validator_1.default.isPasswordStrong(data.password)) {
                 throw new Error('Password is not strong enough.');
             }
             updatedData.password = await Sanitizer_1.default.sanitizePassword(data.password);
+        }
+        const updatedUser = await this.userModel.findByIdAndUpdate(userId, updatedData, { new: true });
+        return updatedUser;
+    }
+    async completeuser(data, userId) {
+        const updatedData = {};
+        if (data.firstName) {
+            updatedData.firstName = Sanitizer_1.default.sanitizeName(data.firstName);
+        }
+        if (data.lastName) {
+            updatedData.lastName = Sanitizer_1.default.sanitizeName(data.lastName);
+        }
+        if (data.gender) {
+            updatedData.gender = Sanitizer_1.default.sanitizeGender(data.gender);
+        }
+        if (data.phoneNumber) {
+            updatedData.phoneNumber = data.phoneNumber;
+        }
+        if (data.location) {
+            updatedData.location = data.location;
         }
         const updatedUser = await this.userModel.findByIdAndUpdate(userId, updatedData, { new: true });
         return updatedUser;

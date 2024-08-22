@@ -9,6 +9,8 @@ const passport_1 = __importDefault(require("passport"));
 const route_1 = __importDefault(require("../routes/route"));
 const passportroute_1 = __importDefault(require("../middleware/passport/passportroute"));
 const mongo_con_1 = __importDefault(require("../utils/mongo_con"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const cors_1 = __importDefault(require("cors"));
 class App {
     constructor() {
         this.app = (0, express_1.default)();
@@ -18,19 +20,24 @@ class App {
     }
     initializeMiddleware() {
         mongo_con_1.default;
+        this.app.use((0, cookie_parser_1.default)());
         this.app.use(express_1.default.json());
         this.app.use(express_1.default.urlencoded({ extended: true }));
+        this.app.use((0, cors_1.default)({
+            origin: '*',
+            credentials: true
+        }));
         this.app.use((0, express_session_1.default)({
             secret: process.env.SESSION_SECRET || '',
             resave: false,
             saveUninitialized: true,
             cookie: {
-                maxAge: 30 * 60 * 1000,
+                maxAge: 6 * 60 * 1000,
+                secure: process.env.NODE_ENV === 'production',
             }
         }));
         this.app.use(passport_1.default.initialize());
         this.app.use(passport_1.default.session());
-        //this.app.use(cors)
     }
     initializeRoutes() {
         this.app.use('/api', route_1.default);

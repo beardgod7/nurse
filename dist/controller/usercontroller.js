@@ -14,7 +14,6 @@ class UserController {
                 const user = await this.userService.createUser({ email, password });
                 if (user) {
                     const token = Jwtoken_1.default.generateAuthToken(user);
-                    //res.status(201).json({ user, token });
                     usertoken_1.default.sendToken(user, 201, res);
                 }
                 else {
@@ -66,6 +65,28 @@ class UserController {
                 console.error('Error completing profile:', error);
                 return next(new Errorhandler_1.default('Profile completion failed', 500));
             }
+        };
+        this.completeuser = async (req, res, next) => {
+            try {
+                const user = req.user;
+                const profileData = req.body;
+                if (!user || !user._id) {
+                    return next(new Errorhandler_1.default('User not authenticated', 401));
+                }
+                ;
+                const userId = user._id.toString();
+                const updatedUser = await this.userService.completeuser(profileData, userId);
+                if (updatedUser) {
+                    res.status(200).json({ user: updatedUser });
+                }
+                else {
+                    next(new Errorhandler_1.default('Profile completion failed', 400));
+                }
+            }
+            catch (error) {
+                console.error('Error completing profile:', error);
+            }
+            return next(new Errorhandler_1.default('Profile completion failed', 500));
         };
         this.userService = userService;
     }

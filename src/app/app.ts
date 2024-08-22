@@ -5,6 +5,7 @@ import UserRouter from '../routes/route';
 import passportroute from '../middleware/passport/passportroute'; 
 import ErrorHandler from '../utils/Errorhandler'; 
 import  connectivityistance  from '../utils/mongo_con'; 
+import cookieParser from 'cookie-parser';
 import cors from 'cors'
 
 class App {
@@ -15,25 +16,32 @@ class App {
     this.initializeMiddleware();
     this.initializeRoutes();
     this.initializeErrorHandling(); 
+    
   }
-
+  
   private initializeMiddleware(): void {
     connectivityistance; 
+
+    this.app.use(cookieParser())
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(cors({
+      origin: '*', 
+      credentials: true
+    }));
     this.app.use(session({
       secret: process.env.SESSION_SECRET || '',
       resave: false,
       saveUninitialized: true,
       cookie: {
-        maxAge: 30 * 60 * 1000,
+        maxAge: 6 * 60 * 1000,
+        secure: process.env.NODE_ENV === 'production',
       }
     }));
     this.app.use(passport.initialize());
     this.app.use(passport.session());
-    //this.app.use(cors)
+    
   }
-
   private initializeRoutes(): void {
     this.app.use('/api', UserRouter);
     this.app.use('/auth', passportroute);
