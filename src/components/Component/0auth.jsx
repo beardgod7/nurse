@@ -1,6 +1,18 @@
 import React from 'react'
 import google from '../../assets/Google__G__logo.svg.png'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
+import { Facebook } from 'lucide-react'
+
 const Auth0 = () => {
+  const {mutate} = useMutation({
+    mutationFn:(auth)=>{
+      return axios.post(import.meta.env.VITE_API_GOOGLE_POINT,auth)
+    },
+  })
+  const handleGoogle =()=>{
+     mutate();
+  }
   return (
     <div className='flex flex-col m-5'>
         <div className="flex items-center">
@@ -9,8 +21,8 @@ const Auth0 = () => {
   <div className="h-px bg-gray-300 flex-grow"></div>
 </div>
 <div className="mt-3 flex items-center justify-center gap-10">
-  <img src={google} alt="logo" className='max-w-6' />
-  <img src={google} alt="logo" className='max-w-6' />
+  <img src={google} alt="logo" className='max-w-6' onClick={handleGoogle} />
+  <Facebook className='max-w-6 text-blue-700' />
 </div>
     </div>
   )
