@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import passport from 'passport';
 import { Router } from 'express';
-import TokenService from '../../utils/Jwtoken';
 import IUser from '../../model/user/userinterface';
 import ErrorHandler from '../../utils/Errorhandler'
 import AuthService from '../../utils/usertoken';
@@ -48,4 +47,3 @@ class Passportroute {
 }
 
 export default new Passportroute().router;
-
