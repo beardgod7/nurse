@@ -4,17 +4,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-class UserHash {
-    static async hashPassword(password) {
-        return await bcryptjs_1.default.hash(password, 10);
+class Userhash {
+    static async hashPassword(user) {
+        if (user.changed('password')) {
+            user.password = await bcryptjs_1.default.hash(user.password, 10); // Add `!` to ensure password is not undefined
+        }
     }
-    static async comparePassword(Password, candidatePassword) {
-        try {
-            return await bcryptjs_1.default.compare(candidatePassword, Password);
+    static async comparePassword(user, password) {
+        if (!user.password) {
+            throw new Error('User password is not set.');
         }
-        catch (error) {
-            throw new Error('Password comparison failed');
-        }
+        return bcryptjs_1.default.compare(password, user.password);
     }
 }
-exports.default = UserHash;
+exports.default = Userhash;

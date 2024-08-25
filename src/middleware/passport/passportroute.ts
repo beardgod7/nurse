@@ -19,7 +19,7 @@ class Passportroute {
 
             this.router.get(
                 '/google/callback',
-                passport.authenticate('google', { failureMessage: true }),  
+                passport.authenticate('google', { failureMessage: true }), 
                 this.googleCallback
             );
 
@@ -33,6 +33,9 @@ class Passportroute {
             });
         } catch (error) {
             console.error(error);
+            this.router.use((req: Request, res: Response) => {
+                res.status(500).json({ message: 'Internal server error' }); 
+            });
         }
     }
     public googleCallback = async (req: Request, res: Response, next: NextFunction): Promise<void> => {

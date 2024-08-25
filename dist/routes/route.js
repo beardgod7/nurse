@@ -6,13 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const usercontroller_1 = __importDefault(require("../controller/usercontroller"));
 const userservice_1 = __importDefault(require("../service/userservice"));
-const user_1 = __importDefault(require("../model/user/user"));
+const user_pg_1 = __importDefault(require("../model/user/user_pg"));
 const auth_1 = __importDefault(require("../middleware/auth"));
 const oauthauth_1 = __importDefault(require("../middleware/passport/oauthauth"));
 class UserRouter {
     constructor() {
         this.router = (0, express_1.Router)();
-        const userService = new userservice_1.default(user_1.default);
+        const userService = new userservice_1.default(user_pg_1.default);
         this.userController = new usercontroller_1.default(userService);
         this.authMiddleware = new oauthauth_1.default();
         this.auth = new auth_1.default();

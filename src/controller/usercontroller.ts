@@ -58,11 +58,11 @@ class UserController {
       const user = req.user as IUser;
       const profileData: googleuserupdateDTO = req.body;
 
-      if (!user || !user._id) {
+      if (!user || !user.id) {
         return next(new ErrorHandler('User not authenticated', 401));
       };
   
-      const userId = user._id.toString();
+      const userId = user.id.toString();
 
       const updatedUser = await this.userService.completegoogleuser(profileData, userId);
       if (updatedUser) {
@@ -81,11 +81,11 @@ class UserController {
       const user = req.user as IUser;
       const profileData:userupdateDTO = req.body;
 
-      if (!user || !user._id) {
+      if (!user || !user.id) {
         return next(new ErrorHandler('User not authenticated', 401));
       };
   
-      const userId = user._id.toString();
+      const userId = user.id.toString();
 
       const updatedUser = await this.userService.completeuser(profileData, userId);
       if (updatedUser) {

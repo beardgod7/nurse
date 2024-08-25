@@ -1,8 +1,9 @@
-import User from '../model/user/user';
+import User from '../model/user/user_pg';
 import IUser, { ILocation } from '../model/user/userinterface';
 import Validator from '../utils/Validator';
 import Sanitizer from '../utils/Sanitizer';
 import TokenService from '../utils/Jwtoken';
+import Userhash from '../utils/bcrypt';
 
 export interface IUserService {
     createUser(data: CreateUserDTO): Promise<IUser | null>;
@@ -54,7 +55,7 @@ export interface IUserService {
       }
   
       
-      const existingUser = await this.userModel.findOne({ email: sanitizedEmail });
+      const existingUser = await this.userModel.findOne({ where: { email: sanitizedEmail } });
       if (existingUser) {
         return null; 
       }
@@ -82,12 +83,12 @@ export interface IUserService {
       }
   
       
-      const user = await this.userModel.findOne({ email: sanitizedEmail });
+      const user = await this.userModel.findOne({where:{ email: sanitizedEmail }});
       if (!user) {
         return null; 
       }
   
-      const isMatch = await user.comparePassword(sanitizedPassword);
+      const isMatch = await Userhash.comparePassword(user,sanitizedPassword);
       if (!isMatch) {
         return null; 
       }
@@ -119,9 +120,12 @@ export interface IUserService {
         }
         updatedData.password = await Sanitizer.sanitizePassword(data.password);
       }
-  
-      const updatedUser = await this.userModel.findByIdAndUpdate(userId, updatedData, { new: true });
-      return updatedUser;
+      const user = await this.userModel.findByPk(userId);
+      if (!user) {
+        return null;
+      }
+      await user.update(updatedData);
+      return user;
     }
     
     async  completeuser(data: userupdateDTO, userId: string): Promise<IUser | null> {
@@ -141,8 +145,12 @@ export interface IUserService {
       if (data.location) {
         updatedData.location = data.location; 
       }
-      const updatedUser = await this.userModel.findByIdAndUpdate(userId, updatedData, { new: true });
-      return updatedUser;
+      const user = await this.userModel.findByPk(userId);
+      if (!user) {
+        return null;
+      }
+      await user.update(updatedData);
+      return user;
     } 
 
   }

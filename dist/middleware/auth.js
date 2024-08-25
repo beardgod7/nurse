@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const user_1 = __importDefault(require("../model/user/user"));
+const user_pg_1 = __importDefault(require("../model/user/user_pg"));
 const Errorhandler_1 = __importDefault(require("../utils/Errorhandler"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 class Auth {
@@ -15,10 +15,10 @@ class Auth {
             }
             const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET || '');
             console.log(decoded);
-            if (!decoded._id) {
+            if (!decoded.id) {
                 return next(new Errorhandler_1.default('Invalid token. Please log in again.', 401));
             }
-            const user = await user_1.default.findById(decoded._id);
+            const user = await user_pg_1.default.findByPk(decoded.id);
             if (!user) {
                 return next(new Errorhandler_1.default('User not found', 404));
             }

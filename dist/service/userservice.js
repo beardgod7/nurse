@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Validator_1 = __importDefault(require("../utils/Validator"));
 const Sanitizer_1 = __importDefault(require("../utils/Sanitizer"));
 const Jwtoken_1 = __importDefault(require("../utils/Jwtoken"));
+const bcrypt_1 = __importDefault(require("../utils/bcrypt"));
 class UserService {
     constructor(userModel) {
         this.userModel = userModel;
@@ -20,7 +21,7 @@ class UserService {
         if (!Validator_1.default.isPasswordStrong(sanitizedPassword)) {
             throw new Error('Password is not strong enough.');
         }
-        const existingUser = await this.userModel.findOne({ email: sanitizedEmail });
+        const existingUser = await this.userModel.findOne({ where: { email: sanitizedEmail } });
         if (existingUser) {
             return null;
         }
@@ -41,11 +42,11 @@ class UserService {
         if (!Validator_1.default.isEmailValid(sanitizedEmail)) {
             throw new Error('Invalid email address.');
         }
-        const user = await this.userModel.findOne({ email: sanitizedEmail });
+        const user = await this.userModel.findOne({ where: { email: sanitizedEmail } });
         if (!user) {
             return null;
         }
-        const isMatch = await user.comparePassword(sanitizedPassword);
+        const isMatch = await bcrypt_1.default.comparePassword(user, sanitizedPassword);
         if (!isMatch) {
             return null;
         }
@@ -75,8 +76,12 @@ class UserService {
             }
             updatedData.password = await Sanitizer_1.default.sanitizePassword(data.password);
         }
-        const updatedUser = await this.userModel.findByIdAndUpdate(userId, updatedData, { new: true });
-        return updatedUser;
+        const user = await this.userModel.findByPk(userId);
+        if (!user) {
+            return null;
+        }
+        await user.update(updatedData);
+        return user;
     }
     async completeuser(data, userId) {
         const updatedData = {};
@@ -95,8 +100,12 @@ class UserService {
         if (data.location) {
             updatedData.location = data.location;
         }
-        const updatedUser = await this.userModel.findByIdAndUpdate(userId, updatedData, { new: true });
-        return updatedUser;
+        const user = await this.userModel.findByPk(userId);
+        if (!user) {
+            return null;
+        }
+        await user.update(updatedData);
+        return user;
     }
 }
 exports.default = UserService;

@@ -8,7 +8,7 @@ const express_session_1 = __importDefault(require("express-session"));
 const passport_1 = __importDefault(require("passport"));
 const route_1 = __importDefault(require("../routes/route"));
 const passportroute_1 = __importDefault(require("../middleware/passport/passportroute"));
-const mongo_con_1 = __importDefault(require("../utils/mongo_con"));
+const pg_connect_1 = __importDefault(require("../middleware/pg_connect"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
 class App {
@@ -19,7 +19,7 @@ class App {
         this.initializeErrorHandling();
     }
     initializeMiddleware() {
-        mongo_con_1.default;
+        pg_connect_1.default.syncDatabase();
         this.app.use((0, cookie_parser_1.default)());
         this.app.use(express_1.default.json());
         this.app.use(express_1.default.urlencoded({ extended: true }));

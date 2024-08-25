@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import UserController from '../controller/usercontroller';
 import UserService from '../service/userservice';
-import User from '../model/user/user';
+import User from '../model/user/user_pg';
 import  IUserService from '../service/userservice'; 
 import Auth from '../middleware/auth'
 import  AuthMiddleware  from '../middleware/passport/oauthauth';

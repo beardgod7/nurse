@@ -1,20 +1,25 @@
 import bcrypt from 'bcryptjs';
+import User from '../model/user/user_pg';
 
-class UserHash {
-    static async hashPassword(password: string): Promise<string> {
-        return await bcrypt.hash(password, 10);
+class Userhash {
+  static async hashPassword(user: User): Promise<void> {
+    if (user.changed('password')) {
+      user.password = await bcrypt.hash(user.password!, 10); // Add `!` to ensure password is not undefined
+    }
+  }
+
+  static async comparePassword(user: User, password: string): Promise<boolean> {
+    if (!user.password) {
+      throw new Error('User password is not set.');
     }
 
-    static async comparePassword(Password: string, candidatePassword: string): Promise<boolean> {
-        try {
-            return await bcrypt.compare(candidatePassword, Password);
-        } catch (error) {
-            throw new Error('Password comparison failed');
-        }
-    }
+    return bcrypt.compare(password, user.password);
+  }
 }
 
-export default UserHash;
+export default Userhash;
+
+   
 
 
   

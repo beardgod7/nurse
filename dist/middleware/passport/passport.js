@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const passport_1 = __importDefault(require("passport"));
 const passport_google_oauth20_1 = require("passport-google-oauth20");
-const user_1 = __importDefault(require("../../model/user/user"));
+const user_pg_1 = __importDefault(require("../../model/user/user_pg"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 class passportconfig {
@@ -24,19 +24,27 @@ class passportconfig {
                 scope: ['profile', 'email'],
             }, async (accessToken, refreshToken, profile, done) => {
                 var _a, _b;
+                const email = ((_b = (_a = profile.emails) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.value) || '';
                 const newUser = {
                     googleId: profile.id,
-                    email: ((_b = (_a = profile.emails) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.value) || '',
+                    email: email,
                     role: 'client',
                 };
                 try {
-                    let user = await user_1.default.findOne({ googleId: profile.id });
+                    let user = await user_pg_1.default.findOne({ where: { email } });
                     if (user) {
-                        done(null, user);
+                        if (!user.googleId) {
+                            user.googleId = profile.id;
+                            await user.save();
+                            return done(null, user);
+                        }
+                        else {
+                            return done(null, user);
+                        }
                     }
                     else {
-                        user = await user_1.default.create(newUser);
-                        done(null, user);
+                        user = await user_pg_1.default.create(newUser);
+                        return done(null, user);
                     }
                 }
                 catch (err) {
@@ -44,11 +52,11 @@ class passportconfig {
                 }
             }));
             passport_1.default.serializeUser((user, done) => {
-                done(null, user._id);
+                done(null, user.id);
             });
             passport_1.default.deserializeUser(async (id, done) => {
                 try {
-                    const user = await user_1.default.findById(id);
+                    const user = await user_pg_1.default.findByPk(id);
                     done(null, user);
                 }
                 catch (err) {

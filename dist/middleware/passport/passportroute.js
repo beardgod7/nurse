@@ -36,6 +36,9 @@ class Passportroute {
         }
         catch (error) {
             console.error(error);
+            this.router.use((req, res) => {
+                res.status(500).json({ message: 'Internal server error' });
+            });
         }
     }
 }

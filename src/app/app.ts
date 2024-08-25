@@ -3,8 +3,8 @@ import session from 'express-session';
 import passport from 'passport';
 import UserRouter from '../routes/route'; 
 import passportroute from '../middleware/passport/passportroute'; 
-import ErrorHandler from '../utils/Errorhandler'; 
-import  connectivityistance  from '../utils/mongo_con'; 
+import ErrorHandler from '../utils/Errorhandler';
+import connect_pg from '../middleware/pg_connect' 
 import cookieParser from 'cookie-parser';
 import cors from 'cors'
 
@@ -20,8 +20,7 @@ class App {
   }
   
   private initializeMiddleware(): void {
-    connectivityistance; 
-
+    connect_pg.syncDatabase()
     this.app.use(cookieParser())
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));

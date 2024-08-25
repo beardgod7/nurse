@@ -1,35 +1,22 @@
-import mongoose, { Document } from 'mongoose';
-
-export default interface IUser extends Document {
-    googleId?: string;  
-    firstName?: string;  
-    lastName?: string;   
+export default interface UserAttributes {
+    id: number;
+    googleId?: string;
+    firstName?: string;
+    lastName?: string;
     email: string;
-    gender?:string
-    phoneNumber?: number;  
+    gender?: string;
+    phoneNumber?: number;
     password?: string;
-    role: 'client';  
-    location?: ILocation; 
-    chats?: IChat[];  
+    role: 'client';
+    location?: ILocation
     createdAt: Date;
     updatedAt: Date;
-    comparePassword(candidatePassword: string): Promise<boolean>;
-}
-
-
-export interface ILocation {
-    type: 'Point';
-    coordinates: [number, number];
-    address?: string;
-}
-
-
-interface IChat {
-    nurse: mongoose.Schema.Types.ObjectId;  
-    messages: IMessage[];
-}
- interface IMessage {
-    sender: mongoose.Schema.Types.ObjectId;
-    text: string;
-    timestamp: Date;
+    comparePassword?: (password:String) => Promise<boolean>
+}  
+export interface ILocation{
+    location?: {
+        type: string;
+        coordinates: number[];
+        address?: string;
+      };
 }
