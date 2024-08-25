@@ -4,8 +4,8 @@
   "description": "nursing service locator",
   "main": "server.js",
   "scripts": {
-    "start": "node dist/server6.js",
-    "dev": "nodemon dist/server6.js",
+    "start": "node dist/server.js",
+    "dev": "nodemon dist/server.js",
     "build": "tsc"
   },
   "repository": {
