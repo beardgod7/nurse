@@ -29,6 +29,7 @@ class passportconfig {
                     googleId: profile.id,
                     email: email,
                     role: 'client',
+                    ProfileComplete: false,
                 };
                 try {
                     let user = await user_pg_1.default.findOne({ where: { email } });

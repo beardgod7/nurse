@@ -8,7 +8,8 @@ export default interface UserAttributes {
     phoneNumber?: number;
     password?: string;
     role: 'client';
-    location?: ILocation
+    location?: ILocation;
+    ProfileComplete:boolean
     createdAt: Date;
     updatedAt: Date;
     comparePassword?: (password:String) => Promise<boolean>

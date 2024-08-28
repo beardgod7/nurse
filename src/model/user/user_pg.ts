@@ -23,6 +23,7 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
   public location?:ILocation
   public createdAt!: Date;
   public updatedAt!: Date;
+  public ProfileComplete!: boolean;
   public comparePassword?: (password:String) => Promise<boolean>
   public getChats!: () => Promise<Chat[]>;
   public addChat!: (chat: Chat) => Promise<void>;
@@ -72,6 +73,10 @@ User.init({
     type: DataTypes.JSONB, 
     allowNull: true,
     defaultValue: null,
+  },
+  ProfileComplete: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
   },
   createdAt: {
     type: DataTypes.DATE,

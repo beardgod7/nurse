@@ -29,6 +29,7 @@ class UserService {
             email: sanitizedEmail,
             password: sanitizedPassword,
             role: 'client',
+            ProfileComplete: false,
             createdAt: new Date(),
             updatedAt: new Date(),
         });
@@ -76,6 +77,7 @@ class UserService {
             }
             updatedData.password = await Sanitizer_1.default.sanitizePassword(data.password);
         }
+        updatedData.ProfileComplete = true;
         const user = await this.userModel.findByPk(userId);
         if (!user) {
             return null;
@@ -100,6 +102,7 @@ class UserService {
         if (data.location) {
             updatedData.location = data.location;
         }
+        updatedData.ProfileComplete = true;
         const user = await this.userModel.findByPk(userId);
         if (!user) {
             return null;

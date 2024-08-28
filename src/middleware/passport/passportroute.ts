@@ -41,8 +41,11 @@ class Passportroute {
     public googleCallback = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         if (req.user) {
             const user = req.user as IUser;
-            const token = AuthService.sendToken(user, 201, res);
-            
+            if (user.ProfileComplete) {
+                res.redirect('https://nurseapp.netlify.app/homepage');
+            } else {
+                res.redirect('https://nurseapp.netlify.app/update');
+            }
         } else {
             res.status(401).json({ message: "Authentication failed" });
         }

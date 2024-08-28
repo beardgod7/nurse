@@ -6,13 +6,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const passport_1 = __importDefault(require("passport"));
 const express_1 = require("express");
 const Errorhandler_1 = __importDefault(require("../../utils/Errorhandler"));
-const usertoken_1 = __importDefault(require("../../utils/usertoken"));
 class Passportroute {
     constructor() {
         this.googleCallback = async (req, res, next) => {
             if (req.user) {
                 const user = req.user;
-                const token = usertoken_1.default.sendToken(user, 201, res);
+                if (user.ProfileComplete) {
+                    res.redirect('https://nurseapp.netlify.app/homepage');
+                }
+                else {
+                    res.redirect('https://nurseapp.netlify.app/update');
+                }
             }
             else {
                 res.status(401).json({ message: "Authentication failed" });

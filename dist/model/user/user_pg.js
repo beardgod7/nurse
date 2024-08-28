@@ -54,6 +54,10 @@ User.init({
         allowNull: true,
         defaultValue: null,
     },
+    ProfileComplete: {
+        type: sequelize_1.DataTypes.BOOLEAN,
+        defaultValue: false,
+    },
     createdAt: {
         type: sequelize_1.DataTypes.DATE,
         defaultValue: sequelize_1.DataTypes.NOW,

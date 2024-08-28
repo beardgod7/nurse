@@ -63,6 +63,7 @@ export interface IUserService {
         email: sanitizedEmail,
         password: sanitizedPassword, 
          role: 'client',
+         ProfileComplete:false,
         createdAt: new Date(),
         updatedAt: new Date(),
       });
@@ -120,6 +121,7 @@ export interface IUserService {
         }
         updatedData.password = await Sanitizer.sanitizePassword(data.password);
       }
+      updatedData.ProfileComplete = true;
       const user = await this.userModel.findByPk(userId);
       if (!user) {
         return null;
@@ -145,6 +147,7 @@ export interface IUserService {
       if (data.location) {
         updatedData.location = data.location; 
       }
+      updatedData.ProfileComplete = true;
       const user = await this.userModel.findByPk(userId);
       if (!user) {
         return null;
