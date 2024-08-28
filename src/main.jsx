@@ -10,6 +10,9 @@ import Login from './Pages/Auth/Login.jsx'
 import {QueryClient, QueryClientProvider,} from '@tanstack/react-query'
 import User from './Pages/User.jsx'
 import NotFound from './Pages/NotFound.jsx'
+import ProtectRoute from './components/context/ProtectRoute.jsx'
+import { AuthProvider } from './components/context/index.jsx'
+import Profile from './Pages/Profile.jsx'
 
 
 
@@ -33,16 +36,27 @@ const router = createBrowserRouter([
     element:<Login />,
   },
   {
-    path:'/user',
-    element: <User />,
+    path:'/profile',
+    element:<Profile />,
   },
+  {
+    element: <ProtectRoute />,  
+    children: [  
+      {
+        path: '/user',
+        element: <User />,
+      },
+    ],
+  }
   
 ])
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <AuthProvider>
     <QueryClientProvider client={queryClient}>
       <ToastContainer />
     <RouterProvider router={router} />
     </QueryClientProvider>
+    </AuthProvider>
   </StrictMode>,
 )

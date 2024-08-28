@@ -1,19 +1,19 @@
 import React from 'react'
 import google from '../../assets/Google__G__logo.svg.png'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios'
 import { Facebook } from 'lucide-react'
 
 const Auth0 = () => {
-  // const {refetch} = useQuery({
-  //   queryKey: ['google'],
-  //   queryFn: async () => {
-  //     return axios.get(import.meta.env.VITE_API_GOOGLE_POINT)
-  //   },
-  //   enabled:false,
-  // })
+  const {refetch} = useQuery({
+    queryKey: ['google'],
+    queryFn: async () => {
+      return axios.get(import.meta.env.VITE_API_GOOGLE_POINT)
+    },
+    enabled:false,
+  })
   const handleGoogle =()=>{
-    window.location.href = import.meta.env.VITE_API_GOOGLE_POINT;
+   refetch();
   }
   return (
     <div className='flex flex-col m-5'>

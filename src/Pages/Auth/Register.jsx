@@ -13,7 +13,9 @@ const Register = () => {
   const { mutate, isLoading: mutationLoading } = useMutation({
     mutationFn: (reg) => {
       setIsLoading(true);
-      return axios.post(import.meta.env.VITE_API_REG_POINT, reg);
+      const res = axios.post(import.meta.env.VITE_API_REG_POINT, reg);
+      console.log(res);
+      return res;
     },
     onSuccess: () => {
       toast.success("User registration successful!", {
@@ -32,13 +34,13 @@ const Register = () => {
       {isLoading && (
         <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-50">
           <svg
-            class="animate-spin h-8 w-8 text-blue-600"
+            className="animate-spin h-8 w-8 text-blue-600"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
           >
             <circle
-              class="opacity-25"
+              className="opacity-25"
               cx="12"
               cy="12"
               r="10"
@@ -46,7 +48,7 @@ const Register = () => {
               strokeWidth="4"
             ></circle>
             <path
-              class="opacity-75"
+              className="opacity-75"
               fill="currentColor"
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
             ></path>
@@ -54,7 +56,7 @@ const Register = () => {
         </div>
       )}
       <div
-        className={`p-8 bg-white rounded-lg shadow-lg ${
+        className={`p-8 bg-white rounded-lg  ${
           isLoading ? "filter blur-sm" : ""
         }`}
       >

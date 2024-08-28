@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import { loginInput, registerInput } from '@/schema';
 
 const AuthForm = ({ showField, mutate }) => {
-    const initialValues = showField ? { fullName: '', email: '', password: '', terms:false } : { email: '', password: '' };
+    const initialValues = showField ? { email: '', password: '', terms:false } : { email: '', password: '' };
     const validationSchema = showField ? registerInput : loginInput;
 
     const { values, handleChange, handleSubmit, errors, touched, handleBlur } = useFormik({
@@ -20,7 +20,7 @@ const AuthForm = ({ showField, mutate }) => {
     return (
         <Card className='border-none shadow-none p-3 md:px-12'>
             <form className='space-y-6' onSubmit={handleSubmit}>
-                {showField && (
+                {/* {showField && (
                     <div className="flex flex-col">
                         <label htmlFor="fullName" className='font-semibold'>Name</label>
                         <Input
@@ -35,7 +35,7 @@ const AuthForm = ({ showField, mutate }) => {
                             <p className='text-red-600 font-medium text-[0.7em] ps-2'>{errors.fullName}</p>
                         ) : ''}
                     </div>
-                )}
+                )} */}
                 <div className="flex flex-col">
                     <label htmlFor="email" className='font-semibold'>Email</label>
                     <Input

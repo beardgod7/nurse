@@ -1,5 +1,6 @@
 import Auth0 from '@/components/Component/0auth'
 import AuthForm from '@/components/Component/AuthForm'
+import { useAuth } from '@/components/context'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import React, { useState } from 'react'
@@ -9,17 +10,20 @@ import { toast } from 'react-toastify'
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const {login} = useAuth();
 
   const { mutate, isLoading: mutationLoading } = useMutation({
     mutationFn: (reg) => {
       setIsLoading(true);
-      return axios.post(import.meta.env.VITE_API_LOG_POINT, reg);
+     return axios.post(import.meta.env.VITE_API_LOG_POINT, reg);
+      
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("User Logged In successful!", {
         onClose: () => navigate("/user"),
       });
       setIsLoading(false);
+      login(data.data);
     },
     onError: (error) => {
       toast.error("Error In User Login", error);
@@ -31,13 +35,13 @@ const Login = () => {
         {isLoading && (
         <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-50">
           <svg
-            class="animate-spin h-8 w-8 text-blue-600"
+            className="animate-spin h-8 w-8 text-blue-600"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
           >
             <circle
-              class="opacity-25"
+              className="opacity-25"
               cx="12"
               cy="12"
               r="10"
@@ -45,7 +49,7 @@ const Login = () => {
               strokeWidth="4"
             ></circle>
             <path
-              class="opacity-75"
+              className="opacity-75"
               fill="currentColor"
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
             ></path>
