@@ -59,8 +59,7 @@ const Login = () => {
       <div className="text-center p-3 space-y-2">
         <h3 className="text-2xl font-extrabold">Login Now</h3>
         <p className="mb-5">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-          quidem quasi
+          welcome to E
         </p>
       </div>
       <AuthForm showField={false} mutate={mutate} />
