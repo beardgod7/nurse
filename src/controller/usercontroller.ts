@@ -23,12 +23,10 @@ class UserController {
         const token = TokenService.generateAuthToken(user);
         
         AuthService.sendToken(user, 201, res);
-      } else {
-        next(new ErrorHandler("User already exists", 400));
-      }
+      } 
     } catch (error) {
       console.error('Error creating user:', error);
-      return next(new ErrorHandler("Error creating user", 500));
+      next(error)
     }
   };
 
@@ -43,12 +41,10 @@ class UserController {
       const user = await this.userService.login({ email, password });
         if (user) {
             AuthService.sendToken(user, 200, res);
-      } else {
-        return next(new ErrorHandler("Invalid email or password", 400));
-      }
+      } 
     } catch (error) {
       console.error('Error during login:', error);
-      return next(new ErrorHandler("Login failed", 500));
+      next(error);
     }
   };
 
@@ -67,12 +63,10 @@ class UserController {
       const updatedUser = await this.userService.completegoogleuser(profileData, userId);
       if (updatedUser) {
         res.status(200).json({ user: updatedUser });
-      } else {
-        next(new ErrorHandler('Profile completion failed', 400));
-      }
+      } 
     } catch (error) {
       console.error('Error completing profile:', error);
-      return next(new ErrorHandler('Profile completion failed', 500));
+      next(error)
     }
   };
 
@@ -90,12 +84,11 @@ class UserController {
       const updatedUser = await this.userService.completeuser(profileData, userId);
       if (updatedUser) {
         res.status(200).json({ user: updatedUser });
-      } else {
-        next(new ErrorHandler('Profile completion failed', 400));
-      }
+      } 
     } catch (error) {
       console.error('Error completing profile:', error);
-      }  return next(new ErrorHandler('Profile completion failed', 500));
+      next(error)
+      }  
     }
 
 }

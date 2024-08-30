@@ -7,6 +7,7 @@ const Validator_1 = __importDefault(require("../utils/Validator"));
 const Sanitizer_1 = __importDefault(require("../utils/Sanitizer"));
 const Jwtoken_1 = __importDefault(require("../utils/Jwtoken"));
 const bcrypt_1 = __importDefault(require("../utils/bcrypt"));
+const Errorhandler_1 = __importDefault(require("../utils/Errorhandler"));
 class UserService {
     constructor(userModel) {
         this.userModel = userModel;
@@ -16,14 +17,14 @@ class UserService {
         const sanitizedEmail = Sanitizer_1.default.sanitizeEmail(email);
         const sanitizedPassword = Sanitizer_1.default.sanitizePassword(password);
         if (!Validator_1.default.isEmailValid(sanitizedEmail)) {
-            throw new Error('Invalid email address.');
+            throw new Errorhandler_1.default('Invalid email address.', 400);
         }
         if (!Validator_1.default.isPasswordStrong(sanitizedPassword)) {
-            throw new Error('Password is not strong enough.');
+            throw new Errorhandler_1.default('Password is not strong enough.', 400);
         }
         const existingUser = await this.userModel.findOne({ where: { email: sanitizedEmail } });
         if (existingUser) {
-            return null;
+            throw new Errorhandler_1.default('user already exist', 400);
         }
         const newUser = new this.userModel({
             email: sanitizedEmail,
@@ -41,15 +42,15 @@ class UserService {
         const sanitizedEmail = Sanitizer_1.default.sanitizeEmail(email);
         const sanitizedPassword = Sanitizer_1.default.sanitizePassword(password);
         if (!Validator_1.default.isEmailValid(sanitizedEmail)) {
-            throw new Error('Invalid email address.');
+            throw new Errorhandler_1.default('Invalid email address.', 400);
         }
         const user = await this.userModel.findOne({ where: { email: sanitizedEmail } });
         if (!user) {
-            return null;
+            throw new Errorhandler_1.default('user doesnt exist.', 401);
         }
         const isMatch = await bcrypt_1.default.comparePassword(user, sanitizedPassword);
         if (!isMatch) {
-            return null;
+            throw new Errorhandler_1.default('password is invalid', 401);
         }
         const token = Jwtoken_1.default.generateAuthToken(user);
         return user;
@@ -71,16 +72,10 @@ class UserService {
         if (data.location) {
             updatedData.location = data.location;
         }
-        if (data.password) {
-            if (!Validator_1.default.isPasswordStrong(data.password)) {
-                throw new Error('Password is not strong enough.');
-            }
-            updatedData.password = await Sanitizer_1.default.sanitizePassword(data.password);
-        }
         updatedData.ProfileComplete = true;
         const user = await this.userModel.findByPk(userId);
         if (!user) {
-            return null;
+            throw new Errorhandler_1.default('user not found', 401);
         }
         await user.update(updatedData);
         return user;
@@ -105,7 +100,7 @@ class UserService {
         updatedData.ProfileComplete = true;
         const user = await this.userModel.findByPk(userId);
         if (!user) {
-            return null;
+            throw new Errorhandler_1.default('user not found', 401);
         }
         await user.update(updatedData);
         return user;

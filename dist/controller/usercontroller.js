@@ -16,13 +16,10 @@ class UserController {
                     const token = Jwtoken_1.default.generateAuthToken(user);
                     usertoken_1.default.sendToken(user, 201, res);
                 }
-                else {
-                    next(new Errorhandler_1.default("User already exists", 400));
-                }
             }
             catch (error) {
                 console.error('Error creating user:', error);
-                return next(new Errorhandler_1.default("Error creating user", 500));
+                next(error);
             }
         };
         this.login = async (req, res, next) => {
@@ -35,13 +32,10 @@ class UserController {
                 if (user) {
                     usertoken_1.default.sendToken(user, 200, res);
                 }
-                else {
-                    return next(new Errorhandler_1.default("Invalid email or password", 400));
-                }
             }
             catch (error) {
                 console.error('Error during login:', error);
-                return next(new Errorhandler_1.default("Login failed", 500));
+                next(error);
             }
         };
         this.completegoogleuser = async (req, res, next) => {
@@ -57,13 +51,10 @@ class UserController {
                 if (updatedUser) {
                     res.status(200).json({ user: updatedUser });
                 }
-                else {
-                    next(new Errorhandler_1.default('Profile completion failed', 400));
-                }
             }
             catch (error) {
                 console.error('Error completing profile:', error);
-                return next(new Errorhandler_1.default('Profile completion failed', 500));
+                next(error);
             }
         };
         this.completeuser = async (req, res, next) => {
@@ -79,14 +70,11 @@ class UserController {
                 if (updatedUser) {
                     res.status(200).json({ user: updatedUser });
                 }
-                else {
-                    next(new Errorhandler_1.default('Profile completion failed', 400));
-                }
             }
             catch (error) {
                 console.error('Error completing profile:', error);
+                next(error);
             }
-            return next(new Errorhandler_1.default('Profile completion failed', 500));
         };
         this.userService = userService;
     }
