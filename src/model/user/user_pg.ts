@@ -58,7 +58,7 @@ User.init({
     allowNull: true,
   },
   phoneNumber: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.BIGINT,
     allowNull: true,
   },
   password: {

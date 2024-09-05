@@ -38,7 +38,7 @@ User.init({
         allowNull: true,
     },
     phoneNumber: {
-        type: sequelize_1.DataTypes.INTEGER,
+        type: sequelize_1.DataTypes.BIGINT,
         allowNull: true,
     },
     password: {
