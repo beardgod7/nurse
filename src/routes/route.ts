@@ -26,7 +26,7 @@ class UserRouter {
       this.router.post('/create-users',  this.userController.createUser);
       this.router.post('/login', this.userController.login);
       this.router.put('/Update', this.authMiddleware.isAuthenticated,this.userController.completegoogleuser);
-      this.router.put('/update-user', this.auth.isAuthenticated,this.userController.completeuser)
+      this.router.put('/update-user', this.userController.completeuser)
       this.router.post('/forget-password', this.userController.forgetpassword);
       this.router.post('/password-activation/:token', this.userController.activatePassword);
       //test route for authmiddleware for google users in dev mode only frontend dont use
