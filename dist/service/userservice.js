@@ -8,6 +8,7 @@ const Sanitizer_1 = __importDefault(require("../utils/Sanitizer"));
 const Jwtoken_1 = __importDefault(require("../utils/Jwtoken"));
 const bcrypt_1 = __importDefault(require("../utils/bcrypt"));
 const Errorhandler_1 = __importDefault(require("../utils/Errorhandler"));
+const mail_1 = __importDefault(require("../utils/mail"));
 class UserService {
     constructor(userModel) {
         this.userModel = userModel;
@@ -104,6 +105,47 @@ class UserService {
         }
         await user.update(updatedData);
         return user;
+    }
+    async forgetpassword(data) {
+        const { email } = data;
+        const sanitizedEmail = Sanitizer_1.default.sanitizeEmail(email);
+        if (!Validator_1.default.isEmailValid(sanitizedEmail)) {
+            throw new Errorhandler_1.default('Invalid email address.', 400);
+        }
+        const User = await this.userModel.findOne({ where: { email: sanitizedEmail } });
+        if (!User) {
+            throw new Errorhandler_1.default('user doesnt  exist', 400);
+        }
+        const activationToken = Jwtoken_1.default.generateAuthToken(User);
+        const activationUrl = `http://localhost:443/api/password-activation/${activationToken}`;
+        try {
+            await mail_1.default.sendMail({
+                email: User.email,
+                subject: "Activate your account",
+                message: `Hello ${User.email}, please click on the link to activate your account: ${activationUrl}`,
+            });
+            return { message: 'Activation email sent successfully!' };
+        }
+        catch (error) {
+            return new Errorhandler_1.default('email wasnt sent', 500);
+        }
+    }
+    async activatePassword(token, newPassword) {
+        const decoded = Jwtoken_1.default.verifyAuthToken(token);
+        if (!decoded) {
+            throw new Errorhandler_1.default('Invalid or expired token.', 400);
+        }
+        const userId = decoded.id;
+        const user = await this.userModel.findOne({ where: { id: userId } });
+        if (!user) {
+            throw new Errorhandler_1.default('User not found.', 404);
+        }
+        const sanitizedPassword = Sanitizer_1.default.sanitizePassword(newPassword);
+        if (!Validator_1.default.isPasswordStrong(sanitizedPassword)) {
+            throw new Errorhandler_1.default('Password is not strong enough.', 400);
+        }
+        await user.update({ password: sanitizedPassword });
+        return { message: 'Password updated successfully.' };
     }
 }
 exports.default = UserService;

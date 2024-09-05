@@ -1,9 +1,9 @@
 import { Request, Response ,NextFunction} from 'express';
-import IUserService, { googleuserupdateDTO, userupdateDTO } from '../service/userservice';  
 import TokenService from '../utils/Jwtoken';
 import ErrorHandler from '../utils/Errorhandler';
 import IUser from '../model/user/userinterface';
 import AuthService from '../utils/usertoken';
+import IUserService, { googleuserupdateDTO, userupdateDTO } from '../service/service-interface';
 
 
 
@@ -90,6 +90,47 @@ class UserController {
       next(error)
       }  
     }
+    public forgetpassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      try {
+        const email = req.body;
+
+        if (!email) {
+          return next(new ErrorHandler("Please provide both email and password", 400));
+        }
+  
+        const updatedUser = await this.userService.forgetpassword(email);
+
+        if (updatedUser) {
+          res.status(200).json({
+            status: 'success',
+            message: updatedUser.message,
+        });
+        } 
+      } catch (error) {
+        console.error('Error completing profile:', error);
+        next(error)
+        }  
+      }
+
+
+      public activatePassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+          const {token} =req.params
+          const {password} = req.body;
+  
+          const updatedUser = await this.userService.activatePassword(token, password);
+  
+          if (updatedUser) {
+            res.status(200).json({
+              status: 'success',
+              message: updatedUser.message,
+          });
+          } 
+        } catch (error) {
+          console.error('error updating password', error);
+          next(error)
+          }  
+        }
 
 }
 

@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import IUser from '../model/user/userinterface';
 
 class TokenService {
@@ -11,6 +11,14 @@ class TokenService {
       }
     );
     return token;
+  }
+
+  static verifyAuthToken(token: string) {
+    try {
+      return jwt.verify(token, process.env.JWT_SECRET || '') as JwtPayload;
+    } catch (error) {
+      return null;
+    }
   }
 }
 

@@ -1,40 +1,15 @@
 import User from '../model/user/user_pg';
-import IUser, { ILocation } from '../model/user/userinterface';
+import jwt from 'jsonwebtoken';
+import IUser from '../model/user/userinterface';
 import Validator from '../utils/Validator';
 import Sanitizer from '../utils/Sanitizer';
 import TokenService from '../utils/Jwtoken';
 import Userhash from '../utils/bcrypt';
 import ErrorHandler from '../utils/Errorhandler';
+import Mailer from '../utils/mail';
+import IUserService, { CreateUserDTO, googleuserupdateDTO, LoginUserDTO, userupdateDTO } from './service-interface';
 
-export interface IUserService {
-    createUser(data: CreateUserDTO): Promise<IUser | null>;
-    login(data: LoginUserDTO): Promise<IUser | null>;
-    completegoogleuser(data:googleuserupdateDTO,userId:string):Promise<IUser | null>;
-    completeuser(data:userupdateDTO,userId:string):Promise<IUser | null>
-    
-  }
-  export interface googleuserupdateDTO {
-    firstName:string,
-    lastName:string,
-    phoneNumber:number,
-    gender:string,
-    location:ILocation,
-    password:string,
-  }
-  export interface userupdateDTO extends googleuserupdateDTO{}
-  export interface CreateUserDTO {
-    email: string;
-    password: string;
-  }
- 
-  
-  export interface LoginUserDTO {
-    email: string;
-    password: string;
-  }
 
- 
-  
   class UserService implements IUserService {
     private userModel:typeof User 
     constructor(userModel: typeof User) { 
@@ -149,11 +124,63 @@ export interface IUserService {
       }
       await user.update(updatedData);
       return user;
-    } 
+    }
+    
+    async forgetpassword(data: CreateUserDTO) : Promise<{ message: string } | void>{
+      const { email} = data;
+  
+      const sanitizedEmail = Sanitizer.sanitizeEmail(email);
+  
+      if (!Validator.isEmailValid(sanitizedEmail)) {
+        throw new ErrorHandler('Invalid email address.',400);
+      }
+      const User = await this.userModel.findOne({ where: { email: sanitizedEmail } });
+      if (!User) {
+        throw new ErrorHandler('user doesnt  exist',400);
+      }
+      const activationToken = TokenService.generateAuthToken(User);
+      const activationUrl = `http://localhost:443/api/password-activation/${activationToken}`;
+    
+    try {
+      await Mailer.sendMail({
+        email: User.email,
+        subject: "Activate your account",
+        message: `Hello ${User.email}, please click on the link to activate your account: ${activationUrl}`,
+      });
+      return { message: 'Activation email sent successfully!' }
+    } catch (error) {
+      return new ErrorHandler('email wasnt sent', 500);
+    }
+    }
+
+    async activatePassword(token: string, newPassword: string): Promise<{ message: string }> {
+      
+      const decoded = TokenService.verifyAuthToken(token);
+      if (!decoded) {
+        throw new ErrorHandler('Invalid or expired token.', 400);
+      }
+  
+      const userId = decoded.id;
+
+      const user = await this.userModel.findOne({ where: { id: userId } });
+      if (!user) {
+        throw new ErrorHandler('User not found.', 404);
+      }
+      const sanitizedPassword = Sanitizer.sanitizePassword(newPassword);
+      if (!Validator.isPasswordStrong(sanitizedPassword)) {
+        throw new ErrorHandler('Password is not strong enough.',400);
+      }
+      await user.update({ password: sanitizedPassword });
+  
+      return { message: 'Password updated successfully.' };
+    }
+
+
+
 
   }
   
   export default UserService;
   
 
-  
+

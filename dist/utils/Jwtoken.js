@@ -11,5 +11,13 @@ class TokenService {
         });
         return token;
     }
+    static verifyAuthToken(token) {
+        try {
+            return jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET || '');
+        }
+        catch (error) {
+            return null;
+        }
+    }
 }
 exports.default = TokenService;

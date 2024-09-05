@@ -76,6 +76,42 @@ class UserController {
                 next(error);
             }
         };
+        this.forgetpassword = async (req, res, next) => {
+            try {
+                const email = req.body;
+                if (!email) {
+                    return next(new Errorhandler_1.default("Please provide both email and password", 400));
+                }
+                const updatedUser = await this.userService.forgetpassword(email);
+                if (updatedUser) {
+                    res.status(200).json({
+                        status: 'success',
+                        message: updatedUser.message,
+                    });
+                }
+            }
+            catch (error) {
+                console.error('Error completing profile:', error);
+                next(error);
+            }
+        };
+        this.activatePassword = async (req, res, next) => {
+            try {
+                const { token } = req.params;
+                const { password } = req.body;
+                const updatedUser = await this.userService.activatePassword(token, password);
+                if (updatedUser) {
+                    res.status(200).json({
+                        status: 'success',
+                        message: updatedUser.message,
+                    });
+                }
+            }
+            catch (error) {
+                console.error('error updating password', error);
+                next(error);
+            }
+        };
         this.userService = userService;
     }
 }

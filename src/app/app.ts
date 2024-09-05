@@ -25,9 +25,9 @@ class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cors({
-      origin: '*', 
-      credentials: true
-    }));
+      origin: 'http://localhost:5173',
+      credentials: true, 
+    }))
     this.app.use(session({
       secret: process.env.SESSION_SECRET || '',
       resave: false,
