@@ -7,13 +7,7 @@ import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { profileSchema } from "@/schema";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue,} from "@/components/ui/select";
 
 const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,43 +15,39 @@ const Profile = () => {
 
   const { mutate, isLoading: mutationLoading } = useMutation({
     mutationFn: async (prof) => {
-      setIsLoading(true);
-      const res = await axios.post(import.meta.env.VITE_API_PROFILE_POINT, prof);
-      console.log(res);
-      return res;
+      try {
+        setIsLoading(true);
+        const res = await axios.post(import.meta.env.VITE_API_PROFILE_POINT, prof);
+        return res.data;
+      } catch (error) {
+        throw error.response ? error.response.data : { message: 'Something is wrong' };
+      }
     },
     onSuccess: () => {
-      toast.success("User registration successful!", {
+      toast.success("User Profile updated successfully!", {
         onClose: () => navigate("/login"),
       });
       setIsLoading(false);
     },
     onError: (error) => {
-      toast.error("Error in user registration", error.message);
+      toast.error(error.message);
       setIsLoading(false);
     },
   });
-
+  
   const initialValues = { name: "", phone: "", gender: "" };
   const validationSchema = profileSchema;
-  const {
-    values,
-    handleChange,
-    handleSubmit,
-    errors,
-    touched,
-    handleBlur,
-    setFieldValue,
-  } = useFormik({
+  
+  const { values, handleChange, handleSubmit, errors, touched, handleBlur, setFieldValue } = useFormik({
     initialValues,
     validationSchema,
     onSubmit: (values) => {
-        const id = localStorage.getItem(JSON.parse(reg.id));
-        const IdValues = { ...values, id }; 
-        mutate(IdValues);
+      const id = localStorage.getItem("userId"); 
+      const IdValues = { ...values, id }; 
+      mutate(IdValues); 
     },
   });
-
+  
   return (
     <div className="min-h-screen grid place-content-center pt-8 relative">
       {isLoading && (
@@ -84,11 +74,7 @@ const Profile = () => {
           </svg>
         </div>
       )}
-      <div
-        className={`p-8 bg-white rounded-lg  ${
-          isLoading ? "filter blur-sm" : ""
-        }`}
-      >
+      <div className={`p-8 bg-white rounded-lg  ${isLoading ? "filter blur-sm" : ""}`}>
         <div className="text-center p-3 space-y-2">
           <h3 className="text-xl font-extrabold">Complete Your Profile</h3>
           <p className="mb-5">
@@ -150,7 +136,7 @@ const Profile = () => {
                 <SelectItem value="female">Female</SelectItem>
               </SelectContent>
             </Select>
-
+  
             {errors.gender && touched.gender ? (
               <p className="text-red-600 font-medium text-[0.7em] ps-2">
                 {errors.gender}
@@ -167,6 +153,7 @@ const Profile = () => {
       </div>
     </div>
   );
+  
 };
 
 export default Profile;

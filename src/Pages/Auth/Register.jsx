@@ -11,24 +11,29 @@ const Register = () => {
   const navigate = useNavigate();
 
   const { mutate, isLoading: mutationLoading } = useMutation({
-    mutationFn: (reg) => {
+    mutationFn: async (reg) => {
       setIsLoading(true);
-      const res = axios.post(import.meta.env.VITE_API_REG_POINT, reg);
-      console.log(res);
-      return res;
+      try {
+        const res = await axios.post(import.meta.env.VITE_API_REG_POINT, reg);
+        console.log(res); 
+        return res.data;
+      } catch (error) {
+        throw error.response ? error.response.data : { message: 'Something went wrong' };
+      }
     },
     onSuccess: () => {
-      toast.success("User registration successful!", {
-        onClose: () => navigate("/login"),
-      });
+        toast.success("Registration Is Successful ", {
+          onClose: () => navigate("/profile"),
+        });
       setIsLoading(false);
     },
     onError: (error) => {
-      toast.error("Error in user registration", error);
+      toast.error(error.message || 'Error occurred');
       setIsLoading(false);
     },
   });
-
+  
+  
   return (
     <div className="min-h-screen grid place-content-center pt-8 relative">
       {isLoading && (

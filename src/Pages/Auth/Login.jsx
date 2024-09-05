@@ -13,20 +13,24 @@ const Login = () => {
   const {login} = useAuth();
 
   const { mutate, isLoading: mutationLoading } = useMutation({
-    mutationFn: (reg) => {
+    mutationFn: async(reg) => {
+      try{
       setIsLoading(true);
-     return axios.post(import.meta.env.VITE_API_LOG_POINT, reg);
-      
+     const res = await axios.post(import.meta.env.VITE_API_LOG_POINT, reg);
+      return res.data;
+      }catch(error){
+        throw error.response ? error.response.data : { message: 'Something went wrong' };
+      }
     },
     onSuccess: (data) => {
       toast.success("User Logged In successful!", {
         onClose: () => navigate("/user"),
       });
       setIsLoading(false);
-      login(data.data);
+      login(data);
     },
     onError: (error) => {
-      toast.error("Error In User Login", error);
+      toast.error(error.message, error);
       setIsLoading(false);
     },
   });
